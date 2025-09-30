@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f2f5;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            margin-top: 50px;
+            border-radius: 15px;
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            font-size: 16px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .user-msg {
+            text-align: right;
+            margin: 5px 0;
+            color: #fff;
+        }
+        .user-bubble {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 15px;
+            background: #0d6efd;
+        }
+        .bot-msg {
+            text-align: left;
+            margin: 5px 0;
+        }
+        .bot-bubble {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 15px;
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-container card shadow-lg p-4">
+            <h3 class="text-center text-primary mb-3">💬 Python Chatbot</h3>
+            <div id="chatbox" class="chat-box mb-3"></div>
+            
+            <form id="chat-form" class="d-flex">
+                <input type="text" id="user-input" name="msg" placeholder="Type your message..."
+                       class="form-control me-2" required>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#chat-form").on("submit", function(e) {
+            e.preventDefault();
+            let userText = $("#user-input").val();
+            $("#chatbox").append(
+                `<div class="user-msg"><span class="user-bubble"><b>You:</b> ${userText}</span></div>`
+            );
+            $("#user-input").val("");
+
+            $.post("/get", { msg: userText }, function(data) {
+                $("#chatbox").append(
+                    `<div class="bot-msg"><span class="bot-bubble"><b>Bot:</b> ${data.response}</span></div>`
+                );
+                $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+            });
+        });
+    </script>
+</body>
+</html>
